@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/trips', tripRoutes);
 
 // Serve uploaded files
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
 // Image upload endpoint
 app.post('/api/upload', uploadSingle('image'), (req, res) => {
