@@ -2,7 +2,7 @@ const Trip = require('../models/tripModel');
 
 // Validation function for trip data
 const validateTripData = (data) => {
-  const { name, category, dates, price, currency, amenities } = data;
+  const { name, category, price, currency, amenities } = data;
   const errors = [];
 
   if (!name || typeof name !== 'string' || name.trim() === '') {
@@ -12,10 +12,6 @@ const validateTripData = (data) => {
   const validCategories = ['Nacional Bus', 'Nacional Aereo', 'Internacional', 'Grupal'];
   if (!category || !validCategories.includes(category)) {
     errors.push('Valid category is required');
-  }
-
-  if (!Array.isArray(dates) || dates.length === 0 || !dates.every(date => !isNaN(Date.parse(date)))) {
-    errors.push('Valid dates array is required');
   }
 
   if (typeof price !== 'number' || price < 0) {
@@ -84,8 +80,6 @@ exports.createTrip = async (req, res) => {
 
     const tripData = {
       ...req.body,
-      // Ensure dates are in the correct format
-      dates: req.body.dates.map(date => new Date(date).toISOString().split('T')[0])
     };
 
     const trip = await Trip.create(tripData);
@@ -115,9 +109,7 @@ exports.updateTrip = async (req, res) => {
     }
 
     const tripData = {
-      ...req.body,
-      // Ensure dates are in the correct format
-      dates: req.body.dates.map(date => new Date(date).toISOString().split('T')[0])
+      ...req.body
     };
 
     const trip = await Trip.update(req.params.id, tripData);
