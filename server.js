@@ -6,6 +6,7 @@ require('dotenv').config();
 
 // Import routes
 const tripRoutes = require('./routes/tripRoutes');
+const rateRoutes = require('./routes/rateRoutes');
 const { uploadSingle, getFileUrl, cleanupUploadedFiles } = require('./utils/fileUpload');
 
 // Initialize express
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // API Routes
 app.use('/api/trips', tripRoutes);
+app.use('/api/rates', rateRoutes);
 
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
