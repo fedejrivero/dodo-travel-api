@@ -21,11 +21,11 @@ class Rate {
 
   // Create a new rate
   static async create(rateData) {
-    const { hotel, date, nights, busBed, regime, asist, excursions, price, trip_id } = rateData;
+    const { hotel, date, nights, busBed, regime, assist, excursions, price, trip_id } = rateData;
     
     const [result] = await db.query(
-      'INSERT INTO rates (hotel, date, nights, busBed, regime, asist, excursions, price, trip_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [hotel, date, nights, busBed, regime, asist, excursions, price, trip_id]
+      'INSERT INTO rates (hotel, date, nights, busBed, regime, assist, excursions, price, trip_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [hotel, date, nights, busBed, regime, assist, excursions, price, trip_id]
     );
     
     return this.findById(result.insertId);
@@ -33,11 +33,11 @@ class Rate {
 
   // Update a rate
   static async update(id, rateData) {
-    const { hotel, date, nights, busBed, regime, asist, excursions, price, trip_id } = rateData;
+    const { hotel, date, nights, busBed, regime, assist, excursions, price, trip_id } = rateData;
     
     await db.query(
-      'UPDATE rates SET hotel = ?, date = ?, nights = ?, busBed = ?, regime = ?, asist = ?, excursions = ?, price = ?, trip_id = ? WHERE id = ?',
-      [hotel, date, nights, busBed, regime, asist, excursions, price, trip_id, id]
+      'UPDATE rates SET hotel = ?, date = ?, nights = ?, busBed = ?, regime = ?, assist = ?, excursions = ?, price = ?, trip_id = ? WHERE id = ?',
+      [hotel, date, nights, busBed, regime, assist, excursions, price, trip_id, id]
     );
     
     return this.findById(id);
