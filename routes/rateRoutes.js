@@ -6,7 +6,8 @@ const {
   getRatesByTripId,
   createRate,
   updateRate,
-  deleteRate
+  deleteRate,
+  deleteRatesByTripId
 } = require('../controllers/rateController');
 
 // Routes for /api/rates
@@ -21,6 +22,8 @@ router.route('/:id')
   .delete(deleteRate);
 
 // Route for getting rates by trip ID
-router.get('/trip/:tripId', getRatesByTripId);
+router.route('/trip/:tripId')
+  .get(getRatesByTripId)
+  .delete(deleteRatesByTripId);
 
 module.exports = router;

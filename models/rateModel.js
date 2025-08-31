@@ -21,11 +21,11 @@ class Rate {
 
   // Create a new rate
   static async create(rateData) {
-    const { hotel, date, price, trip_id } = rateData;
+    const { hotel, date, nights, busBed, regime, asist, excursions, price, trip_id } = rateData;
     
     const [result] = await db.query(
-      'INSERT INTO rates (hotel, date, price, trip_id) VALUES (?, ?, ?, ?)',
-      [hotel, date, price, trip_id]
+      'INSERT INTO rates (hotel, date, nights, busBed, regime, asist, excursions, price, trip_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [hotel, date, nights, busBed, regime, asist, excursions, price, trip_id]
     );
     
     return this.findById(result.insertId);
@@ -33,11 +33,11 @@ class Rate {
 
   // Update a rate
   static async update(id, rateData) {
-    const { hotel, date, price, trip_id } = rateData;
+    const { hotel, date, nights, busBed, regime, asist, excursions, price, trip_id } = rateData;
     
     await db.query(
-      'UPDATE rates SET hotel = ?, date = ?, price = ?, trip_id = ? WHERE id = ?',
-      [hotel, date, price, trip_id, id]
+      'UPDATE rates SET hotel = ?, date = ?, nights = ?, busBed = ?, regime = ?, asist = ?, excursions = ?, price = ?, trip_id = ? WHERE id = ?',
+      [hotel, date, nights, busBed, regime, asist, excursions, price, trip_id, id]
     );
     
     return this.findById(id);
@@ -50,6 +50,11 @@ class Rate {
     
     await db.query('DELETE FROM rates WHERE id = ?', [id]);
     return rate;
+  }
+
+  static async deleteRatesByTripId(tripId) {
+    const [rows] = await db.query('DELETE FROM rates WHERE trip_id = ?', [tripId]);
+    return rows;
   }
 }
 

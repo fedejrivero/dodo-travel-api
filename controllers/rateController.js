@@ -81,11 +81,23 @@ const deleteRate = async (req, res, next) => {
   }
 };
 
+const deleteRatesByTripId = async (req, res, next) => {
+  try {
+    const rates = await Rate.deleteRatesByTripId(req.params.tripId);
+    if (!rates) {
+      return res.status(404).json({ message: 'Rates not found' });
+    }
+    res.status(200).json({ message: 'Rates removed' });
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   getRates,
   getRate,
   getRatesByTripId,
   createRate,
   updateRate,
-  deleteRate
+  deleteRate,
+  deleteRatesByTripId
 };
