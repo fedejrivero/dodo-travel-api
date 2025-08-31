@@ -63,7 +63,8 @@ const uploadSingle = (fieldName) => {
 const getFileUrl = (filename) => {
   if (!filename) return null;
   // In production, you would use your actual domain
-  const baseUrl = process.env.BASE_URL || 'http://localhost:5001';
+  // const baseUrl = process.env.BASE_URL || 'http://localhost:5001';
+  const baseUrl = process.env.BASE_URL || 'https://srv942210.hstgr.cloud';
   return `${baseUrl}/uploads/${filename}`;
 };
 
