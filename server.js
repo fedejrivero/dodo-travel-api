@@ -2,24 +2,31 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 // Import routes
 const tripRoutes = require('./routes/tripRoutes');
 const rateRoutes = require('./routes/rateRoutes');
+const authRoutes = require('./routes/authRoutes');
 const { uploadSingle, getFileUrl, cleanupUploadedFiles } = require('./utils/fileUpload');
 
 // Initialize express
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // API Routes
 app.use('/api/trips', tripRoutes);
 app.use('/api/rates', rateRoutes);
+app.use('/api/auth', authRoutes);
 
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));

@@ -25,15 +25,16 @@ class Trip {
 
   // Create a new trip
   static async create(tripData) {
-    const { name, category, price, currency, description, amenities, image_url, image_filename } = tripData;
+    const { name, category, price, currency, dates, description, amenities, image_url, image_filename } = tripData;
     
     const [result] = await db.query(
-      'INSERT INTO trips (name, category, price, currency, description, amenities, image_url, image_filename) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO trips (name, category, price, currency, dates, description, amenities, image_url, image_filename) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         name,
         category,
         price,
         currency,
+        dates,
         description,
         JSON.stringify(amenities),
         image_url,
@@ -46,13 +47,13 @@ class Trip {
 
   // Update a trip
   static async update(id, tripData) {
-    const { name, category, price, currency, description, amenities, image_url, image_filename } = tripData;
+    const { name, category, price, currency, dates, description, amenities, image_url, image_filename } = tripData;
     
     // If we have a new image, update both URL and filename
     // If we don't have a new image but have an existing URL, keep the existing filename
     const updateFields = [
       'name = ?', 'category = ?', 'price = ?', 
-      'currency = ?', 'description = ?', 'amenities = ?', 'image_url = ?',
+      'currency = ?', 'dates = ?', 'description = ?', 'amenities = ?', 'image_url = ?',
       image_filename !== undefined ? 'image_filename = ?' : null
     ].filter(Boolean);
     
@@ -61,6 +62,7 @@ class Trip {
       category,
       price,
       currency,
+      dates,
       description,
       JSON.stringify(amenities),
       image_url,
