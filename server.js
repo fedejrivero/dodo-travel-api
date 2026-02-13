@@ -9,6 +9,14 @@ require('dotenv').config();
 const tripRoutes = require('./routes/tripRoutes');
 const rateRoutes = require('./routes/rateRoutes');
 const authRoutes = require('./routes/authRoutes');
+const clientRoutes = require('./routes/clientRoutes');
+const passengerRoutes = require('./routes/passengerRoutes');
+const operatorRoutes = require('./routes/operatorRoutes');
+const fileRoutes = require('./routes/fileRoutes');
+const serviceRoutes = require('./routes/serviceRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
+const depositRoutes = require('./routes/depositRoutes');
+const expenseRoutes = require('./routes/expenseRoutes');
 const { uploadSingle, getFileUrl, cleanupUploadedFiles } = require('./utils/fileUpload');
 
 // Initialize express
@@ -16,8 +24,10 @@ const app = express();
 
 // Middleware
 const allowedOrigins = [
-  process.env.FRONTEND_URL || 'http://localhost:3000',
-  process.env.FRONTEND_ADMIN_URL || 'http://localhost:3001'
+  process.env.FRONTEND_URL,
+  'http://localhost:3000',
+  process.env.FRONTEND_ADMIN_URL,
+  'http://localhost:3001'
 ];
 
 app.use(cors({
@@ -41,6 +51,14 @@ app.use(cookieParser());
 app.use('/api/trips', tripRoutes);
 app.use('/api/rates', rateRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/clients', clientRoutes);
+app.use('/api/passengers', passengerRoutes);
+app.use('/api/operators', operatorRoutes);
+app.use('/api/files', fileRoutes);
+app.use('/api/services', serviceRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/deposits', depositRoutes);
+app.use('/api/expenses', expenseRoutes);
 
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
@@ -85,4 +103,3 @@ const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
