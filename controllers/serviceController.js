@@ -1,6 +1,12 @@
 const Service = require('../models/serviceModel');
 
 const isNonEmptyString = (v) => typeof v === 'string' && v.trim().length > 0;
+const normalizeConversion = (currency, conversion) => {
+  if (currency !== '$') return null;
+  if (conversion === '' || conversion === null || conversion === undefined) return null;
+  const num = Number(conversion);
+  return Number.isNaN(num) ? null : num;
+};
 
 exports.getServicesByFile = async (req, res) => {
   try {
@@ -48,6 +54,7 @@ exports.createService = async (req, res) => {
       description: req.body.description,
       price: req.body.price,
       currency: req.body.currency,
+      conversion: normalizeConversion(req.body.currency, req.body.conversion),
       status: req.body.status || 'Incompleto',
       dateOut: req.body.dateOut,
       dateIn: req.body.dateIn,
@@ -84,7 +91,10 @@ exports.updateService = async (req, res) => {
       liquidation: req.body.liquidation === undefined ? existing.liquidation : req.body.liquidation,
       description: req.body.description === undefined ? existing.description : req.body.description,
       dateIn: req.body.dateIn === undefined ? existing.date_in : req.body.dateIn,
-      dateProfitability: req.body.dateProfitability === undefined ? existing.date_profitability : req.body.dateProfitability
+      dateProfitability: req.body.dateProfitability === undefined ? existing.date_profitability : req.body.dateProfitability,
+      conversion: req.body.conversion === undefined
+        ? (existing.currency === '$' ? existing.conversion : null)
+        : normalizeConversion(req.body.currency ?? existing.currency, req.body.conversion)
     };
 
     if (!isNonEmptyString(payload.description)) {

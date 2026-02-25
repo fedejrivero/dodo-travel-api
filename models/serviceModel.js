@@ -46,16 +46,47 @@ class Service {
   }
 
   static async create(serviceData) {
-    const { fileId, operatorId, type, description, price, currency, status, dateOut, dateIn, cost, bankExpense, bill, liquidation, dateProfitability } = serviceData;
+    const {
+      fileId,
+      operatorId,
+      type,
+      description,
+      price,
+      currency,
+      conversion,
+      status,
+      dateOut,
+      dateIn,
+      cost,
+      bankExpense,
+      bill,
+      liquidation,
+      dateProfitability
+    } = serviceData;
     const [result] = await db.query(
-      'INSERT INTO services (file_id, operator_id, type, description, price, currency, status, date_out, date_in, date_profitability, cost, bank_expense, bill, liquidation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [fileId, operatorId, type, description, price, currency, status || 'Incompleto', dateOut, dateIn ?? null, dateProfitability ?? null, cost ?? null, bankExpense ?? null, bill ?? null, liquidation ?? null]
+      'INSERT INTO services (file_id, operator_id, type, description, price, currency, conversion, status, date_out, date_in, date_profitability, cost, bank_expense, bill, liquidation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [fileId, operatorId, type, description, price, currency, conversion ?? null, status || 'Incompleto', dateOut, dateIn ?? null, dateProfitability ?? null, cost ?? null, bankExpense ?? null, bill ?? null, liquidation ?? null]
     );
     return this.findById(result.insertId);
   }
 
   static async update(id, serviceData) {
-    const { operatorId, type, description, price, currency, status, dateOut, dateIn, cost, bankExpense, bill, liquidation, dateProfitability } = serviceData;
+    const {
+      operatorId,
+      type,
+      description,
+      price,
+      currency,
+      conversion,
+      status,
+      dateOut,
+      dateIn,
+      cost,
+      bankExpense,
+      bill,
+      liquidation,
+      dateProfitability
+    } = serviceData;
     await db.query(
       `
         UPDATE services
@@ -64,6 +95,7 @@ class Service {
             description = ?,
             price = ?,
             currency = ?,
+            conversion = ?,
             status = ?,
             date_out = ?,
             date_in = ?,
@@ -74,7 +106,7 @@ class Service {
             liquidation = ?
         WHERE id = ?
       `,
-      [operatorId, type, description, price, currency, status || 'Incompleto', dateOut, dateIn ?? null, dateProfitability ?? null, cost ?? null, bankExpense ?? null, bill ?? null, liquidation ?? null, id]
+      [operatorId, type, description, price, currency, conversion ?? null, status || 'Incompleto', dateOut, dateIn ?? null, dateProfitability ?? null, cost ?? null, bankExpense ?? null, bill ?? null, liquidation ?? null, id]
     );
     return this.findById(id);
   }
