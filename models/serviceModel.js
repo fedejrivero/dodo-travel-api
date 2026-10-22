@@ -57,15 +57,15 @@ class Service {
       status,
       dateOut,
       dateIn,
+      file,
       cost,
       bankExpense,
       bill,
-      liquidation,
       dateProfitability
     } = serviceData;
     const [result] = await db.query(
-      'INSERT INTO services (file_id, operator_id, type, description, price, currency, conversion, status, date_out, date_in, date_profitability, cost, bank_expense, bill, liquidation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [fileId, operatorId, type, description, price, currency, conversion ?? null, status || 'Incompleto', dateOut, dateIn ?? null, dateProfitability ?? null, cost ?? null, bankExpense ?? null, bill ?? null, liquidation ?? null]
+      'INSERT INTO services (file_id, operator_id, type, description, price, currency, conversion, status, date_out, date_in, date_profitability, `file`, cost, bank_expense, bill) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [fileId, operatorId, type, description, price, currency, conversion ?? null, status || 'Incompleto', dateOut, dateIn ?? null, dateProfitability ?? null, file ?? null, cost ?? null, bankExpense ?? null, bill ?? null]
     );
     return this.findById(result.insertId);
   }
@@ -81,10 +81,10 @@ class Service {
       status,
       dateOut,
       dateIn,
+      file,
       cost,
       bankExpense,
       bill,
-      liquidation,
       dateProfitability
     } = serviceData;
     await db.query(
@@ -100,13 +100,13 @@ class Service {
             date_out = ?,
             date_in = ?,
             date_profitability = ?,
+            \`file\` = ?,
             cost = ?,
             bank_expense = ?,
-            bill = ?,
-            liquidation = ?
+            bill = ?
         WHERE id = ?
       `,
-      [operatorId, type, description, price, currency, conversion ?? null, status || 'Incompleto', dateOut, dateIn ?? null, dateProfitability ?? null, cost ?? null, bankExpense ?? null, bill ?? null, liquidation ?? null, id]
+      [operatorId, type, description, price, currency, conversion ?? null, status || 'Incompleto', dateOut, dateIn ?? null, dateProfitability ?? null, file ?? null, cost ?? null, bankExpense ?? null, bill ?? null, id]
     );
     return this.findById(id);
   }

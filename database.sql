@@ -14,6 +14,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS expenses;
 DROP TABLE IF EXISTS deposits;
 DROP TABLE IF EXISTS payments;
+DROP TABLE IF EXISTS service_documents;
 DROP TABLE IF EXISTS services;
 DROP TABLE IF EXISTS file_passengers;
 DROP TABLE IF EXISTS files;
@@ -140,7 +141,6 @@ CREATE TABLE services (
   type ENUM('Vuelo', 'Hospedaje', 'Asistencia', 'Paquete', 'Otro') NOT NULL,
   description TEXT NOT NULL,
   bill VARCHAR(512) NULL,
-  liquidation VARCHAR(512) NULL,
   price DECIMAL(12,2) NOT NULL DEFAULT 0,
   currency ENUM('$', 'USD') NOT NULL,
   conversion DECIMAL(12,6) NULL,
@@ -151,12 +151,27 @@ CREATE TABLE services (
   date_out DATE NOT NULL,
   date_in DATE NULL,
   date_profitability DATE NULL,
+  `file` VARCHAR(512) NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_services_file (file_id),
   INDEX idx_services_operator (operator_id),
   CONSTRAINT fk_service_file FOREIGN KEY (file_id) REFERENCES files(id) ON DELETE CASCADE,
   CONSTRAINT fk_service_operator FOREIGN KEY (operator_id) REFERENCES operators(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE service_documents (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  service_id INT NOT NULL,
+  document_type ENUM('invoice', 'receipt', 'liquidation') NOT NULL,
+  original_name VARCHAR(255) NOT NULL,
+  mime_type VARCHAR(100) NOT NULL,
+  file_size INT UNSIGNED NOT NULL,
+  file_data MEDIUMBLOB NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_service_documents_service_type (service_id, document_type),
+  CONSTRAINT fk_service_documents_service FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE payments (

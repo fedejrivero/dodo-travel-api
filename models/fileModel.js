@@ -3,7 +3,12 @@ const db = require('../config/db');
 class FileModel {
   static async findAll() {
     const [rows] = await db.query(`
-      SELECT f.*, c.name AS client_name, c.surname AS client_surname
+      SELECT f.*, c.name AS client_name, c.surname AS client_surname, (
+          SELECT GROUP_CONCAT(CONCAT_WS(' ', p.surname, p.name) SEPARATOR ' ')
+          FROM file_passengers fp
+          INNER JOIN passengers p ON p.id = fp.passenger_id
+          WHERE fp.file_id = f.id
+        ) AS passenger_names
       FROM files f
       INNER JOIN clients c ON f.client_id = c.id
       ORDER BY f.creation_date DESC, f.id DESC

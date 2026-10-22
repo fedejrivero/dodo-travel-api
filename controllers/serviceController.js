@@ -59,10 +59,10 @@ exports.createService = async (req, res) => {
       dateOut: req.body.dateOut,
       dateIn: req.body.dateIn,
       dateProfitability: req.body.dateProfitability,
+      file: req.body.file || null,
       cost: req.body.cost,
       bankExpense: req.body.bankExpense,
-      bill: req.body.bill,
-      liquidation: req.body.liquidation
+      bill: req.body.bill
     };
     if (!payload.operatorId || !payload.type || !payload.price || !payload.currency || !payload.dateOut || !isNonEmptyString(payload.description)) {
       return res.status(400).json({ success: false, error: 'Missing required fields' });
@@ -88,10 +88,10 @@ exports.updateService = async (req, res) => {
       cost: req.body.cost === undefined ? existing.cost : req.body.cost,
       bankExpense: req.body.bankExpense === undefined ? existing.bank_expense : req.body.bankExpense,
       bill: req.body.bill === undefined ? existing.bill : req.body.bill,
-      liquidation: req.body.liquidation === undefined ? existing.liquidation : req.body.liquidation,
       description: req.body.description === undefined ? existing.description : req.body.description,
       dateIn: req.body.dateIn === undefined ? existing.date_in : req.body.dateIn,
       dateProfitability: req.body.dateProfitability === undefined ? existing.date_profitability : req.body.dateProfitability,
+      file: req.body.file === undefined ? existing.file : req.body.file,
       conversion: req.body.conversion === undefined
         ? (existing.currency === '$' ? existing.conversion : null)
         : normalizeConversion(req.body.currency ?? existing.currency, req.body.conversion)

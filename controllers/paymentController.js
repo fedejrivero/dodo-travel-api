@@ -56,11 +56,11 @@ exports.getPaymentsByFile = async (req, res) => {
 exports.createPayment = async (req, res) => {
   try {
     const fileId = req.params.fileId || req.body.fileId;
-    const { date, value, currency, type, detail, receipt } = req.body;
+    const { date, value, currency, type, detail, receipt, passengerId } = req.body;
     if (!fileId || !date || !value || !currency || !type) {
       return res.status(400).json({ success: false, error: 'Missing required fields' });
     }
-    const payment = await Payment.create({ fileId, date, value, currency, type, detail, receipt });
+    const payment = await Payment.create({ fileId, date, value, currency, type, detail, receipt, passengerId });
 
     // Re-evaluate file status based on totals after adding payment
     try {
