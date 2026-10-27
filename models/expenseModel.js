@@ -10,7 +10,8 @@ class Expense {
         description,
         value,
         currency,
-        conversion
+        conversion,
+        is_from_fede AS isFromFede
       FROM expenses
       ORDER BY date DESC, id DESC
     `
@@ -27,7 +28,8 @@ class Expense {
         description,
         value,
         currency,
-        conversion
+        conversion,
+        is_from_fede AS isFromFede
       FROM expenses
       WHERE id = ?
     `,
@@ -37,19 +39,19 @@ class Expense {
   }
 
   static async create(expenseData) {
-    const { date, description, value, currency, conversion } = expenseData;
+    const { date, description, value, currency, conversion, isFromFede } = expenseData;
     const [result] = await db.query(
-      'INSERT INTO expenses (date, description, value, currency, conversion) VALUES (?, ?, ?, ?, ?)',
-      [date, description, value, currency, conversion ?? null]
+      'INSERT INTO expenses (date, description, value, currency, conversion, is_from_fede) VALUES (?, ?, ?, ?, ?, ?)',
+      [date, description, value, currency, conversion ?? null, isFromFede ?? 0]
     );
     return this.findById(result.insertId);
   }
 
   static async update(id, expenseData) {
-    const { date, description, value, currency, conversion } = expenseData;
+    const { date, description, value, currency, conversion, isFromFede } = expenseData;
     await db.query(
-      'UPDATE expenses SET date = ?, description = ?, value = ?, currency = ?, conversion = ? WHERE id = ?',
-      [date, description, value, currency, conversion ?? null, id]
+      'UPDATE expenses SET date = ?, description = ?, value = ?, currency = ?, conversion = ?, is_from_fede = COALESCE(?, is_from_fede) WHERE id = ?',
+      [date, description, value, currency, conversion ?? null, isFromFede ?? null, id]
     );
     return this.findById(id);
   }

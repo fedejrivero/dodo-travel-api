@@ -1,7 +1,7 @@
 const Service = require('../models/serviceModel');
 const ServiceDocument = require('../models/serviceDocumentModel');
 
-const DOCUMENT_TYPES = new Set(['invoice', 'receipt', 'liquidation']);
+const DOCUMENT_TYPES = new Set(['reservation', 'invoice', 'receipt', 'liquidation']);
 
 const isValidDocumentType = (type) => DOCUMENT_TYPES.has(type);
 

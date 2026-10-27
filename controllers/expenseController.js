@@ -8,6 +8,8 @@ const validateExpenseData = (data) => {
   const value = data?.value;
   const currency = data?.currency;
   const conversion = data?.conversion;
+  const isFromFedeProvided = data && Object.prototype.hasOwnProperty.call(data, 'isFromFede');
+  const isFromFede = data?.isFromFede;
 
   if (!date) {
     errors.push('Date is required');
@@ -26,6 +28,10 @@ const validateExpenseData = (data) => {
   const validCurrencies = ['USD', '$'];
   if (!currency || !validCurrencies.includes(currency)) {
     errors.push('Valid currency is required (USD or $)');
+  }
+
+  if (isFromFedeProvided && ![0, '0', 1, '1'].includes(isFromFede)) {
+    errors.push('isFromFede must be 0 or 1');
   }
 
   if (currency === 'USD') {
@@ -90,7 +96,8 @@ exports.createExpense = async (req, res) => {
       conversion:
         req.body.currency === '$' && req.body.conversion !== '' && req.body.conversion !== undefined
           ? Number(req.body.conversion)
-          : null
+          : null,
+      isFromFede: req.body.isFromFede === undefined ? undefined : Number(req.body.isFromFede)
     };
 
     const expense = await Expense.create(expenseData);
@@ -124,7 +131,8 @@ exports.updateExpense = async (req, res) => {
       conversion:
         req.body.currency === '$' && req.body.conversion !== '' && req.body.conversion !== undefined
           ? Number(req.body.conversion)
-          : null
+          : null,
+      isFromFede: req.body.isFromFede === undefined ? undefined : Number(req.body.isFromFede)
     };
 
     const updated = await Expense.update(req.params.id, expenseData);

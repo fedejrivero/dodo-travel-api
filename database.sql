@@ -163,7 +163,7 @@ CREATE TABLE services (
 CREATE TABLE service_documents (
   id INT AUTO_INCREMENT PRIMARY KEY,
   service_id INT NOT NULL,
-  document_type ENUM('invoice', 'receipt', 'liquidation') NOT NULL,
+  document_type ENUM('reservation', 'invoice', 'receipt', 'liquidation') NOT NULL,
   original_name VARCHAR(255) NOT NULL,
   mime_type VARCHAR(100) NOT NULL,
   file_size INT UNSIGNED NOT NULL,
@@ -211,8 +211,10 @@ CREATE TABLE expenses (
   value DECIMAL(12,2) NOT NULL DEFAULT 0,
   currency ENUM('$', 'USD') NOT NULL DEFAULT 'USD',
   conversion DECIMAL(12,6) NULL,
+  is_from_fede TINYINT UNSIGNED NOT NULL DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT chk_expenses_is_from_fede CHECK (is_from_fede IN (0, 1)),
   INDEX idx_expenses_date (date),
   INDEX idx_expenses_currency (currency)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

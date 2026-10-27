@@ -24,7 +24,12 @@ class Service {
     const [rows] = await db.query(`
       SELECT s.*,
              o.name AS operator_name,
-             o.cuit AS operator_cuit
+             o.cuit AS operator_cuit,
+             EXISTS (
+               SELECT 1
+               FROM service_documents sd
+               WHERE sd.service_id = s.id AND sd.document_type = 'reservation'
+             ) AS has_reservation_document
       FROM services s
       INNER JOIN operators o ON s.operator_id = o.id
       WHERE s.file_id = ?
